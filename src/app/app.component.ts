@@ -42,7 +42,8 @@ export class AppComponent {
 
   newTask(): void {
     const dialogRef = this.dialog.open(TaskDialogComponent, {
-      width: '270px',
+      width: '300px',
+      height: '350px',
       data: {
         task: {},
       },
@@ -50,7 +51,12 @@ export class AppComponent {
     dialogRef
       .afterClosed()
       .subscribe((result: TaskDialogResult | undefined) => {
-        if (!result) {
+        if (
+          result.task.title === undefined ||
+          result.task.description === undefined ||
+          result.task.title === '' ||
+          result.task.description === ''
+        ) {
           return;
         }
         // this.todo.push(result.task);
@@ -60,7 +66,8 @@ export class AppComponent {
 
   editTask(list: 'done' | 'todo' | 'inProgress', task: Task): void {
     const dialogRef = this.dialog.open(TaskDialogComponent, {
-      width: '270px',
+      width: '300px',
+      height: '350px',
       data: {
         task,
         enableDelete: true,
@@ -69,7 +76,7 @@ export class AppComponent {
     dialogRef
       .afterClosed()
       .subscribe((result: TaskDialogResult | undefined) => {
-        if (!result) {
+        if (result.task.title === '' || result.task.description === '') {
           return;
         }
         // const dataList = this[list];

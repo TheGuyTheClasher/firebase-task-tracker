@@ -1,7 +1,10 @@
 <mat-card class="item" *ngIf="task">
-    <h2>{{ task.title }}</h2>
-    <p>
-        {{ task.description }}
-    </p>
-    <button (click)="edit.emit(task)">Edit</button>
+  <h2>{{ task.title }}</h2>
+  <p>
+    {{ task.description }}
+  </p>
+  <button class="edit-btn" (click)="edit.emit(task)">
+    <mat-icon class="edit-icon-class">edit</mat-icon>
+    <span>Edit</span>
+  </button>
 </mat-card>

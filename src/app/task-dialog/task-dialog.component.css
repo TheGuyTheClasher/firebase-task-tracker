@@ -1,0 +1,35 @@
+.mat-form-field {
+  width: 250px;
+  margin-bottom: 30px;
+}
+
+.mat-dialog-actions {
+  justify-content: space-around;
+  min-height: 0;
+}
+
+.delete-icon-class {
+  display: grid;
+  place-items: center;
+  margin-top: 30px;
+}
+
+.delete-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 90%;
+  background-color: #f06060;
+  border: none;
+  border-radius: 5px;
+  padding: 6px;
+}
+
+.delete-btn span {
+  padding-top: 5px;
+  margin-left: 5px;
+}
+
+sup {
+  color: red;
+}

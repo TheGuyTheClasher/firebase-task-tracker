@@ -6,3 +6,19 @@
     margin-bottom: 10px;
     cursor: pointer;
 }
+
+.edit-btn{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 90px;
+    background-color: rgb(119, 172, 162);
+    border: none;
+    padding: 5px;
+    padding-top: 8px;
+    border-radius: 5px;
+}
+
+.edit-icon-class{
+    font-size: 20px;
+}
