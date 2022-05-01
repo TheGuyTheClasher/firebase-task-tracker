@@ -61,16 +61,18 @@ export class AppComponent {
     dialogRef
       .afterClosed()
       .subscribe((result: TaskDialogResult | undefined) => {
-        if (
-          result.task.title === undefined ||
-          result.task.description === undefined ||
-          result.task.title === '' ||
-          result.task.description === ''
-        ) {
-          return;
+        if (typeof result === 'object') {
+          if (
+            result.task.title === undefined ||
+            result.task.description === undefined ||
+            result.task.title === '' ||
+            result.task.description === ''
+          ) {
+            return;
+          }
+          this.store.collection('todo').add(result.task);
+          this.openSnackBar('Task added!!', 'Close');
         }
-        this.store.collection('todo').add(result.task);
-        this.openSnackBar('Task added!!', 'Close');
       });
   }
 
@@ -87,15 +89,17 @@ export class AppComponent {
     dialogRef
       .afterClosed()
       .subscribe((result: TaskDialogResult | undefined) => {
-        if (result.task.title === '' || result.task.description === '') {
-          return;
-        }
-        if (result.delete) {
-          this.store.collection(list).doc(task.id).delete();
-          this.openSnackBar('Task deleted!!', 'Close');
-        } else {
-          this.store.collection(list).doc(task.id).update(task);
-          this.openSnackBar('Task updated!!', 'Close');
+        if (typeof result === 'object') {
+          if (result.task.title === '' || result.task.description === '') {
+            return;
+          }
+          if (result.delete) {
+            this.store.collection(list).doc(task.id).delete();
+            this.openSnackBar('Task deleted!!', 'Close');
+          } else {
+            this.store.collection(list).doc(task.id).update(task);
+            this.openSnackBar('Task updated!!', 'Close');
+          }
         }
       });
   }
