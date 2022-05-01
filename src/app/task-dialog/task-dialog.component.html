@@ -10,7 +10,18 @@
 
 <div mat-dialog-actions>
   <button mat-button (click)="cancel()">Cancel</button>
-  <button mat-button [mat-dialog-close]="{ task: data.task }">OK</button>
+  <button
+    [disabled]="
+      data.task.description === '' ||
+      data.task.title === '' ||
+      data.task.description === undefined ||
+      data.task.title === undefined
+    "
+    mat-button
+    [mat-dialog-close]="{ task: data.task }"
+  >
+    OK
+  </button>
 </div>
 
 <div class="delete-icon-class">

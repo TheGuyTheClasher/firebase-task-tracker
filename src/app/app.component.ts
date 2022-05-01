@@ -5,9 +5,27 @@ import { Task } from './task/task';
 import { TaskDialogComponent } from './task-dialog/task-dialog.component';
 import { TaskDialogResult } from './task-dialog/task-dialog.component';
 
-import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
+import {
+  AngularFirestore,
+  AngularFirestoreCollection,
+} from '@angular/fire/firestore';
+import { BehaviorSubject } from 'rxjs';
+
+import {
+  MatSnackBar,
+  MatSnackBarHorizontalPosition,
+  MatSnackBarVerticalPosition,
+} from '@angular/material/snack-bar';
+
+const getObservable = (collection: AngularFirestoreCollection<Task>) => {
+  const subject = new BehaviorSubject<Task[]>([]);
+  collection.valueChanges({ idField: 'id' }).subscribe((val: Task[]) => {
+    subject.next(val);
+  });
+  return subject;
+};
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -15,30 +33,21 @@ import { Observable } from 'rxjs';
 })
 export class AppComponent {
   title = 'Task-tracker';
-  // todo: Task[] = [
-  //   {
-  //     title: 'Buy milk',
-  //     description: 'Go to the store and buy milk',
-  //   },
-  //   {
-  //     title: 'Create a Kanban app',
-  //     description: 'Using Firebase and Angular create a Kanban app!',
-  //   },
-  // ];
-  // inProgress: Task[] = [];
-  // done: Task[] = [];
+  horizontalPosition: MatSnackBarHorizontalPosition = 'end';
+  verticalPosition: MatSnackBarVerticalPosition = 'top';
+  snackBarDurationInSeconds = 3;
 
-  todo = this.store
-    .collection('todo')
-    .valueChanges({ idField: 'id' }) as Observable<Task[]>;
-  inProgress = this.store
-    .collection('inProgress')
-    .valueChanges({ idField: 'id' }) as Observable<Task[]>;
-  done = this.store
-    .collection('done')
-    .valueChanges({ idField: 'id' }) as Observable<Task[]>;
+  todo = getObservable(this.store.collection('todo')) as Observable<Task[]>;
+  inProgress = getObservable(this.store.collection('inProgress')) as Observable<
+    Task[]
+  >;
+  done = getObservable(this.store.collection('done')) as Observable<Task[]>;
 
-  constructor(private dialog: MatDialog, private store: AngularFirestore) {}
+  constructor(
+    private dialog: MatDialog,
+    private store: AngularFirestore,
+    private _snackBar: MatSnackBar
+  ) {}
 
   newTask(): void {
     const dialogRef = this.dialog.open(TaskDialogComponent, {
@@ -47,6 +56,7 @@ export class AppComponent {
       data: {
         task: {},
       },
+      disableClose: true,
     });
     dialogRef
       .afterClosed()
@@ -59,8 +69,8 @@ export class AppComponent {
         ) {
           return;
         }
-        // this.todo.push(result.task);
         this.store.collection('todo').add(result.task);
+        this.openSnackBar('Task added!!', 'Close');
       });
   }
 
@@ -72,6 +82,7 @@ export class AppComponent {
         task,
         enableDelete: true,
       },
+      disableClose: true,
     });
     dialogRef
       .afterClosed()
@@ -79,12 +90,12 @@ export class AppComponent {
         if (result.task.title === '' || result.task.description === '') {
           return;
         }
-        // const dataList = this[list];
-        // const taskIndex = dataList.indexOf(task);
         if (result.delete) {
           this.store.collection(list).doc(task.id).delete();
+          this.openSnackBar('Task deleted!!', 'Close');
         } else {
           this.store.collection(list).doc(task.id).update(task);
+          this.openSnackBar('Task updated!!', 'Close');
         }
       });
   }
@@ -107,5 +118,13 @@ export class AppComponent {
       event.previousIndex,
       event.currentIndex
     );
+  }
+
+  openSnackBar(msg, close) {
+    this._snackBar.open(msg, close, {
+      duration: this.snackBarDurationInSeconds * 1000,
+      horizontalPosition: this.horizontalPosition,
+      verticalPosition: this.verticalPosition,
+    });
   }
 }

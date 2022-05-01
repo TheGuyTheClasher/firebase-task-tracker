@@ -9,6 +9,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormsModule } from '@angular/forms';
 
 import { environment } from 'src/environments/environment';
@@ -31,6 +32,7 @@ import { TaskDialogComponent } from './task-dialog/task-dialog.component';
     MatButtonModule,
     MatDialogModule,
     MatInputModule,
+    MatSnackBarModule,
     FormsModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
